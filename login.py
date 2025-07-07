@@ -68,7 +68,7 @@ bg_icon_label.pack()
 # Login Frame
 
 login_frame = Frame(window,bg="#CFE4FA", bd=3, relief="ridge")
-login_frame.place(x=65, y=197, height=250, width=285)
+login_frame.place(x=65, y=197, height=215, width=280)
 
 # Header
 heading_label = Label(login_frame, text="Login Board", font=("Segoe UI", 12, "bold"), 
