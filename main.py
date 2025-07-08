@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
+import time
 
 class Face_recognition_System:
     def __init__(self,root):
@@ -19,7 +20,7 @@ class Face_recognition_System:
         self.photoimg=ImageTk.PhotoImage(img)
 
         bg=Label(self.root,image=self.photoimg)
-        bg.place(x=0,y=60,width=1300,height=734)
+        bg.place(x=0,y=90,width=1300,height=734)
 
         # button
         img1=Image.open(r"D:\college\7 sem\face attendance system\bg4.png")
@@ -59,11 +60,12 @@ class Face_recognition_System:
         img4=img4.resize((120,120), Image.Resampling.LANCZOS)
         self.photoimg4=ImageTk.PhotoImage(img4)
 
-        b4=Button(self.root,image=self.photoimg4,cursor="hand2")
+        b4=Button(self.root,image=self.photoimg4,cursor="hand2",command=lambda: exit(self.root))
         b4.place(x=380,y=350,width=220,height=220)
 
         L4=Label(self.root,text="Exit",font=('times now roman', 12,"bold"))
         L4.place(x=380,y=545,width=218,height=25)
+
 
 
         # bg2
@@ -74,8 +76,15 @@ class Face_recognition_System:
         bg=Label(bg,image=self.photoimg5)
         bg.place(x=700,y=200,width=570,height=334)
 
+        update(self.root)
 
 
+def update(a):
+    subtitlelabel = Label(a, text=" ",font=('times now roman', 10,"bold"),bg="#1060B7", fg="white")
+    subtitlelabel.place(x=0,y=60,width=1300,height=30)
+    date_time=time.strftime(' %B %d, %Y \t\t\t  %I:%M:%S %p on %A ')
+    subtitlelabel.config(text=f"{date_time}" )
+    subtitlelabel.after(1000,update,a)
 
 
 
