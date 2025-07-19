@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import subprocess
 import sys 
+from PIL import Image, ImageTk
 from database import connect_database
 
 
@@ -53,25 +54,22 @@ window.geometry("1000x634+0+0")
 window.resizable(0,0)
 
 # # Background Image
-bg_icon = PhotoImage(file="bg2.png",)
-bg_icon_label = Label(window, image=bg_icon)
+bg_icon=Image.open(r"D:\college\7 sem\Face Attendance System\photos\bg2.png")
+# bg_icon=bg_icon.resize((120,120), Image.Resampling.LANCZOS)
+photoimg4=ImageTk.PhotoImage(bg_icon)
+
+bg_icon_label = Label(window, image=photoimg4)
 bg_icon_label.pack()
 # bg_icon_label.place(x=475, y=25,height=581, width=775)
 
-# bgg_frame = Frame(window, bg='white')
-# bgg_frame.place(x=740, y=315, height=100, width=100)
-# bgg_icon = PhotoImage(file="image.png")
-# bgg_icon_label = Label(bgg_frame, image=bgg_icon)
-# bgg_icon_label.pack()
-
 
 # Login Frame
-
 login_frame = Frame(window)
 login_frame.place(x=65, y=197, height=215, width=280)
 
 
-bg_iconl = PhotoImage(file="bg2l.png",)
+bg_iconl=Image.open(r"D:\college\7 sem\Face Attendance System\photos\bg2l.png")
+bg_iconl=ImageTk.PhotoImage(bg_iconl)
 bg_icon_label1 = Label(login_frame, image=bg_iconl)
 bg_icon_label1.place(x=0, y=0, height=215, width=280)
 
