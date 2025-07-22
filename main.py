@@ -29,7 +29,7 @@ class Face_recognition_System:
         self.photoimg1=ImageTk.PhotoImage(img1)
 
         # b1=Button(self.root,image=self.photoimg1,cursor="hand2")
-        b1 = Button(self.root, image=self.photoimg1, cursor="hand2", command=lambda: Face(self.root))
+        b1 = Button(self.root, image=self.photoimg1, cursor="hand2", command=self.face_details)
         b1.place(x=120,y=100,width=220,height=220)
 
         L1=Label(self.root,text="Face data",font=('times now roman', 12,"bold"))
@@ -79,6 +79,13 @@ class Face_recognition_System:
         bg.place(x=700,y=200,width=570,height=334)
 
         update(self.root)
+
+        # function buttons
+
+    def face_details(self):
+        self.new_window=Toplevel(self.root)
+        self.app=Face(self.new_window)
+
 
 
 
