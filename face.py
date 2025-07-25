@@ -165,10 +165,12 @@ class Face:
                             command=self.update_data)
         update_button.grid(row=0,column=1,padx=20)  
 
-        delete_button=Button(button_frame,text="Delete",font=("roman new times",14), bg="#0147bf", fg="#ffffff",width=8, cursor="hand2",)
+        delete_button=Button(button_frame,text="Delete",font=("roman new times",14), bg="#0147bf", fg="#ffffff",width=8, cursor="hand2",
+                             command=self.delete_data)
         delete_button.grid(row=0,column=2,padx=20)
 
-        reset_button=Button(button_frame,text="Reset",font=("roman new times",14), bg="#0147bf", fg="#cfe4fa",width=8, cursor="hand2",)
+        reset_button=Button(button_frame,text="Reset",font=("roman new times",14), bg="#0147bf", fg="#cfe4fa",width=8, cursor="hand2",
+                            command=self.reset_data)
         reset_button.grid(row=0,column=3,padx=20)
 
         button_frame1=Frame(class_student_frame,bd=2,bg="#ffffff")
@@ -294,6 +296,7 @@ class Face:
                 conn.commit()
                 self.fetch_data()  # Refresh the table after adding data
                 conn.close()
+                self.reset_data()  # Reset the form fields after adding data
                 messagebox.showinfo("Success", "Data added successfully", parent=self.root)
             except Exception as e:
                 messagebox.showerror("Error", f"Error due to {str(e)}", parent=self.root)
@@ -346,8 +349,42 @@ class Face:
             messagebox.showerror("Error","All fields are required",parent=self.root)
         else:
             try:
-                update=messagebox.askyesno("Update","Do you want to update this data?",parent=self.root)
-                if update>0:
+                Update=messagebox.askyesno("Update","Do you want to update this data?",parent=self.root)
+                if Update>0:
+                    conn = mysql.connector.connect(
+                        host="localhost",
+                        user="root",
+                        password="1234",
+                        database="face_system"
+                )
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE face SET dep=%s, course=%s, year=%s, sem=%s, name=%s, `div`=%s, roll=%s, gender=%s, dob=%s, email=%s, phone=%s, address=%s, photo=%s WHERE id=%s",
+                        (self.var_dep.get(), self.var_course.get(), self.var_year.get(), 
+                         self.var_sem.get(), self.var_name.get(), self.var_div.get(), 
+                         self.var_roll.get(), self.var_gender.get(), self.var_dob.get(), 
+                         self.var_email.get(), self.var_phone.get(), self.var_address.get(), 
+                         self.var_radio.get(), self.var_id.get()))
+                    conn.commit()
+                    self.fetch_data()
+                    conn.close()
+                    self.reset_data()   # Reset the form fields after updating data
+                    messagebox.showinfo("Success", "Data updated successfully", parent=self.root)
+                else:
+                    if not update:
+                        return
+            except Exception as e:
+                messagebox.showerror("Error", f"Error due to {str(e)}", parent=self.root)
+            
+            
+            #delete function
+
+    def delete_data(self):
+        if self.var_id.get()=="":
+            messagebox.showerror("Error","Student ID is required",parent=self.root)
+        else:
+            try:
+                delete=messagebox.askyesno("Delete","Do you want to delete this data?",parent=self.root)
+                if delete>0:
                     conn = mysql.connector.connect(
                         host="localhost",
                         user="root",
@@ -355,25 +392,65 @@ class Face:
                         database="face_system"
                     )
                     cursor = conn.cursor()
-                    cursor.execute("UPDATE face SET dep=%s, course=%s, year=%s, "
-                    "sem=%s, name=%s, div=%s, roll=%s, gender=%s, dob=%s, "
-                    "email=%s, phone=%s, address=%s, photo=%s WHERE id=%s",
-                                (self.var_dep.get(), self.var_course.get(), self.var_year.get(), 
-                                 self.var_sem.get(), self.var_name.get(), self.var_div.get(), 
-                                 self.var_roll.get(), self.var_gender.get(), self.var_dob.get(), 
-                                 self.var_email.get(), self.var_phone.get(), self.var_address.get(), 
-                                 self.var_radio.get(), self.var_id.get()))
-                    
+                    cursor.execute("DELETE FROM face WHERE id=%s", (self.var_id.get(),))
                     conn.commit()
                     self.fetch_data()
                     conn.close()
-                    messagebox.showinfo("Success", "Data updated successfully", parent=self.root)
+                    self.reset_data()   # Reset the form fields after deleting data
+                    messagebox.showinfo("Success", "Data deleted successfully", parent=self.root)
                 else:
-                    if not update:
+                    if not delete:
                         return
             except Exception as e:
                 messagebox.showerror("Error", f"Error due to {str(e)}", parent=self.root)
 
+    def reset_data(self):
+        self.var_dep.set("Select Department")
+        self.var_course.set("Select Course")
+        self.var_year.set("Select Year")
+        self.var_sem.set("Select Semester")
+        self.var_id.set("")
+        self.var_name.set("")
+        self.var_div.set("")
+        self.var_roll.set("")
+        self.var_gender.set("")
+        self.var_dob.set("")
+        self.var_email.set("")
+        self.var_phone.set("")
+        self.var_address.set("")
+        self.var_radio.set("")
+        self.fetch_data()
+
+    #     # update function
+    # def generate_dataset(self):
+    #     if self.var_dep.get()=="Select Department" or self.var_name.get()=="" or self.var_id.get()=="" :
+    #         messagebox.showerror("Error","All fields are required",parent=self.root)
+    #     else:
+    #         try:
+    #             conn = mysql.connector.connect(
+    #                     host="localhost",
+    #                     user="root",
+    #                     password="1234",
+    #                     database="face_system"
+    #             )
+    #             cursor = conn.cursor()
+    #             cursor.execute("select * from face")
+    #             row = cursor.fetchall()
+    #             id = 0
+    #             for r in row:
+    #                 id += 1
+    #             cursor.execute("UPDATE face SET dep=%s, course=%s, year=%s, sem=%s, name=%s, `div`=%s, roll=%s, gender=%s, dob=%s, email=%s, phone=%s, address=%s, photo=%s WHERE id=%s",
+    #                 (self.var_dep.get(), self.var_course.get(), self.var_year.get(), 
+    #                 self.var_sem.get(), self.var_name.get(), self.var_div.get(), 
+    #                 self.var_roll.get(), self.var_gender.get(), self.var_dob.get(), 
+    #                 self.var_email.get(), self.var_phone.get(), self.var_address.get(), 
+    #                 self.var_radio.get(), self.var_id.get()))
+    #             conn.commit()
+    #             self.fetch_data()  # Refresh the table after adding data    
+    #             self.reset_data()  # Reset the form fields after adding data
+    #             conn.close()    
+
+        #
 def update(a):
     subtitlelabel = Label(a, text=" ",font=('times now roman', 12,"bold"),bg="#1060B7", fg="#ffffff")
     subtitlelabel.place(x=0,y=60,width=1300,height=30)
