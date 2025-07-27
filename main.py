@@ -16,7 +16,7 @@ class Face_recognition_System:
         heading.place(x=0,y=0,width=1300,height=60)
 
         # bg
-        img=Image.open(r"D:\college\7 sem\Face Attendance System\photos\bg1.png")
+        img=Image.open(r"photos\bg1.png")
         img=img.resize((1300,734), Image.Resampling.LANCZOS)
         self.photoimg=ImageTk.PhotoImage(img)
 
@@ -24,7 +24,7 @@ class Face_recognition_System:
         bg.place(x=0,y=90,width=1300,height=734)
 
         # button
-        img1=Image.open(r"D:\college\7 sem\Face Attendance System\photos\bg4.png")
+        img1=Image.open(r"photos\bg4.png")
         img1=img1.resize((220,220), Image.Resampling.LANCZOS)
         self.photoimg1=ImageTk.PhotoImage(img1)
 
@@ -36,7 +36,7 @@ class Face_recognition_System:
         L1.place(x=120,y=295,width=218,height=25)
 
 
-        img2=Image.open(r"D:\college\7 sem\Face Attendance System\photos\attendance.png")
+        img2=Image.open(r"photos\attendance.png")
         img2=img2.resize((170,170), Image.Resampling.LANCZOS)
         self.photoimg2=ImageTk.PhotoImage(img2)
 
@@ -47,7 +47,7 @@ class Face_recognition_System:
         L2.place(x=380,y=295,width=218,height=25)
 
         
-        img3=Image.open(r"D:\college\7 sem\Face Attendance System\photos\computer.png")
+        img3=Image.open(r"photos\computer.png")
         img3=img3.resize((120,110), Image.Resampling.LANCZOS)
         self.photoimg3=ImageTk.PhotoImage(img3)
 
@@ -58,7 +58,7 @@ class Face_recognition_System:
         L3.place(x=120,y=545,width=218,height=25)
 
 
-        img4=Image.open(r"D:\college\7 sem\Face Attendance System\photos\exit.png")
+        img4=Image.open(r"photos\exit.png")
         img4=img4.resize((120,120), Image.Resampling.LANCZOS)
         self.photoimg4=ImageTk.PhotoImage(img4)
 
@@ -71,7 +71,7 @@ class Face_recognition_System:
 
 
         # bg2
-        img5=Image.open(r"D:\college\7 sem\Face Attendance System\photos\img5.png")
+        img5=Image.open(r"photos\img5.png")
         img5=img5.resize((570,334), Image.Resampling.LANCZOS)
         self.photoimg5=ImageTk.PhotoImage(img5)
 
