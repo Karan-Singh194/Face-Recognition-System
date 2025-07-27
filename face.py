@@ -6,6 +6,7 @@ import subprocess
 import time
 from tkinter import messagebox
 import mysql.connector
+import cv2
 
 
 class Face:
@@ -176,7 +177,7 @@ class Face:
         button_frame1=Frame(class_student_frame,bd=2,bg="#ffffff")
         button_frame1.place(x=0,y=310,width=620,height=65)
 
-        take_photo_button=Button(button_frame1,text="Take Photo Sample",font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
+        take_photo_button=Button(button_frame1,command=self.generate_dataset,text="Take Photo Sample",font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
                                  width=26, cursor="hand2",)
         take_photo_button.grid(row=0,column=0,columnspan=1,padx=20,pady=(15,0))
 
@@ -421,36 +422,74 @@ class Face:
         self.var_radio.set("")
         self.fetch_data()
 
-    #     # update function
-    # def generate_dataset(self):
-    #     if self.var_dep.get()=="Select Department" or self.var_name.get()=="" or self.var_id.get()=="" :
-    #         messagebox.showerror("Error","All fields are required",parent=self.root)
-    #     else:
-    #         try:
-    #             conn = mysql.connector.connect(
-    #                     host="localhost",
-    #                     user="root",
-    #                     password="1234",
-    #                     database="face_system"
-    #             )
-    #             cursor = conn.cursor()
-    #             cursor.execute("select * from face")
-    #             row = cursor.fetchall()
-    #             id = 0
-    #             for r in row:
-    #                 id += 1
-    #             cursor.execute("UPDATE face SET dep=%s, course=%s, year=%s, sem=%s, name=%s, `div`=%s, roll=%s, gender=%s, dob=%s, email=%s, phone=%s, address=%s, photo=%s WHERE id=%s",
-    #                 (self.var_dep.get(), self.var_course.get(), self.var_year.get(), 
-    #                 self.var_sem.get(), self.var_name.get(), self.var_div.get(), 
-    #                 self.var_roll.get(), self.var_gender.get(), self.var_dob.get(), 
-    #                 self.var_email.get(), self.var_phone.get(), self.var_address.get(), 
-    #                 self.var_radio.get(), self.var_id.get()))
-    #             conn.commit()
-    #             self.fetch_data()  # Refresh the table after adding data    
-    #             self.reset_data()  # Reset the form fields after adding data
-    #             conn.close()    
+    #     # face generate dataset function for take photo sample
+    def generate_dataset(self):
+        if self.var_dep.get()=="Select Department" or self.var_name.get()=="" or self.var_id.get()=="" :
+            messagebox.showerror("Error","All fields are required",parent=self.root)
+        else:
+            try:
+                conn = mysql.connector.connect(
+                        host="localhost",
+                        user="root",
+                        password="1234",
+                        database="face_system"
+                )
+                cursor = conn.cursor()
+                cursor.execute("select * from face")
+                row = cursor.fetchall()
+                id = 0
+                for r in row:
+                    id += 1
+                cursor.execute("UPDATE face SET dep=%s, course=%s, year=%s, sem=%s, name=%s, `div`=%s, roll=%s, gender=%s, dob=%s, email=%s, phone=%s, address=%s, photo=%s WHERE id=%s",
+                    (self.var_dep.get(), self.var_course.get(), self.var_year.get(), 
+                    self.var_sem.get(), self.var_name.get(), self.var_div.get(), 
+                    self.var_roll.get(), self.var_gender.get(), self.var_dob.get(), 
+                    self.var_email.get(), self.var_phone.get(), self.var_address.get(), 
+                    self.var_radio.get(), self.var_id.get()))
+                conn.commit()
+                self.fetch_data()  # Refresh the table after adding data    
+                self.reset_data()  # Reset the form fields after adding data
+                conn.close()  
 
-        #
+                # load predifine data on face fronttals from opencv
+                face_classifier = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+
+                def face_cropped(img):
+                    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                    faces = face_classifier.detectMultiScale(gray, 1.3, 5)
+
+                    for (x, y, w, h) in faces:
+                        face_cropped = img[y:y+h, x:x+w]
+                        return face_cropped  
+                    
+
+                cap = cv2.VideoCapture(0)
+                img_id = 0
+                while True:
+                    ret, my_frame = cap.read()
+                    if not ret:
+                        break
+                    face = face_cropped(my_frame)
+                    if face is not None:
+                        img_id += 1
+                        face = cv2.resize(face, (450, 450))
+                        face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
+                        file_name_path = "data/user." + str(id) + "." + str(img_id) + ".jpg"
+                        cv2.imwrite(file_name_path, face)
+                        cv2.putText(face, str(img_id), (50, 50), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2)
+                        cv2.imshow("Cropped Face", face)
+
+                    if cv2.waitKey(1) == ord('q') or img_id == 100:
+                        break
+                cap.release()
+                cv2.destroyAllWindows()
+                messagebox.showinfo("Result", "Generating data sets completed successfully", parent=self.root)
+            except Exception as e:
+                messagebox.showerror("Error", f"Error due to {str(e)}", parent=self.root)
+
+
+
+        
 def update(a):
     subtitlelabel = Label(a, text=" ",font=('times now roman', 12,"bold"),bg="#1060B7", fg="#ffffff")
     subtitlelabel.place(x=0,y=60,width=1300,height=30)
