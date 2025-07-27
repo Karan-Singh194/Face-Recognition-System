@@ -3,6 +3,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 import time
 from face import Face
+import os
 
 class Face_recognition_System:
     def __init__(self,root):
@@ -32,7 +33,7 @@ class Face_recognition_System:
         b1 = Button(self.root, image=self.photoimg1, cursor="hand2", command=self.face_details)
         b1.place(x=120,y=100,width=220,height=220)
 
-        L1=Label(self.root,text="Face data",font=('times now roman', 12,"bold"))
+        L1=Label(self.root,text="Face Detail",font=('times now roman', 12,"bold"))
         L1.place(x=120,y=295,width=218,height=25)
 
 
@@ -68,17 +69,42 @@ class Face_recognition_System:
         L4=Label(self.root,text="Exit",font=('times now roman', 12,"bold"))
         L4.place(x=380,y=545,width=218,height=25)
 
+        img5=Image.open(r"photos\cat2.png")
+        img5=img5.resize((170,170), Image.Resampling.LANCZOS)
+        self.photoimg5=ImageTk.PhotoImage(img5)
+
+        b5=Button(self.root,image=self.photoimg5,cursor="hand2",command=self.open_img)
+        b5.place(x=640,y=100,width=220,height=220)
+
+        L5=Label(self.root,text="Data store",font=('times now roman', 12,"bold"))
+        L5.place(x=640,y=295,width=218,height=25)
+
+        img6=Image.open(r"photos\image.png")
+        img6=img6.resize((170,170), Image.Resampling.LANCZOS)
+        self.photoimg6=ImageTk.PhotoImage(img6)
+
+        b6=Button(self.root,image=self.photoimg6,cursor="hand2")
+        b6.place(x=900,y=100,width=220,height=220)
+
+        L6=Label(self.root,text="Face Train",font=('times now roman', 12,"bold"))
+        L6.place(x=900,y=295,width=218,height=25)
 
 
         # bg2
-        img5=Image.open(r"photos\img5.png")
-        img5=img5.resize((570,334), Image.Resampling.LANCZOS)
-        self.photoimg5=ImageTk.PhotoImage(img5)
+        # img5=Image.open(r"photos\img5.png")
+        # img5=img5.resize((570,334), Image.Resampling.LANCZOS)
+        # self.photoimg5=ImageTk.PhotoImage(img5)
 
-        bg=Label(bg,image=self.photoimg5)
-        bg.place(x=700,y=200,width=570,height=334)
+        # bg=Label(bg,image=self.photoimg5)
+        # bg.place(x=700,y=200,width=570,height=334)
 
         update(self.root)
+
+
+    # oprn data store window
+    def open_img(self):
+        os.startfile("data")
+
 
         # function buttons
 

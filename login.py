@@ -54,7 +54,7 @@ window.geometry("1000x634+0+0")
 window.resizable(0,0)
 
 # # Background Image
-bg_icon=Image.open(r"D:\college\7 sem\Face Attendance System\photos\bg2.png")
+bg_icon=Image.open(r"photos\bg2.png")
 # bg_icon=bg_icon.resize((120,120), Image.Resampling.LANCZOS)
 photoimg4=ImageTk.PhotoImage(bg_icon)
 
@@ -68,7 +68,7 @@ login_frame = Frame(window)
 login_frame.place(x=65, y=197, height=215, width=280)
 
 
-bg_iconl=Image.open(r"D:\college\7 sem\Face Attendance System\photos\bg2l.png")
+bg_iconl=Image.open(r"photos\bg2l.png")
 bg_iconl=ImageTk.PhotoImage(bg_iconl)
 bg_icon_label1 = Label(login_frame, image=bg_iconl)
 bg_icon_label1.place(x=0, y=0, height=215, width=280)
