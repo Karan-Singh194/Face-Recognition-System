@@ -12,8 +12,7 @@ import cv2
 class Face:
     def __init__(self,root):
         self.root=root
-        # Create login root
-        self.root.title("Admin Page")
+        self.root.title("Face detail")
         self.root.geometry("1300x734+0+0")
         self.root.resizable(0,0)
 
@@ -445,7 +444,7 @@ class Face:
                     self.var_sem.get(), self.var_name.get(), self.var_div.get(), 
                     self.var_roll.get(), self.var_gender.get(), self.var_dob.get(), 
                     self.var_email.get(), self.var_phone.get(), self.var_address.get(), 
-                    self.var_radio.get(), self.var_id.get()))
+                    self.var_radio.get(), self.var_id.get()==id+1))
                 conn.commit()
                 self.fetch_data()  # Refresh the table after adding data    
                 self.reset_data()  # Reset the form fields after adding data
@@ -468,6 +467,7 @@ class Face:
                 while True:
                     ret, my_frame = cap.read()
                     if not ret:
+                        messagebox.showerror("Error", "Failed to capture image from camera", parent=self.root)
                         break
                     face = face_cropped(my_frame)
                     if face is not None:
@@ -476,10 +476,10 @@ class Face:
                         face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
                         file_name_path = "data/user." + str(id) + "." + str(img_id) + ".jpg"
                         cv2.imwrite(file_name_path, face)
-                        cv2.putText(face, str(img_id), (50, 50), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2)
+                        cv2.putText(face, str(img_id), (50, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0), 2)
                         cv2.imshow("Cropped Face", face)
 
-                    if cv2.waitKey(1) == ord('q') or img_id == 100:
+                    if cv2.waitKey(1) == 13 or img_id == 100:
                         break
                 cap.release()
                 cv2.destroyAllWindows()

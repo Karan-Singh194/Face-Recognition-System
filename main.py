@@ -3,6 +3,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 import time
 from face import Face
+from train import Train
 import os
 
 class Face_recognition_System:
@@ -83,7 +84,7 @@ class Face_recognition_System:
         img6=img6.resize((170,170), Image.Resampling.LANCZOS)
         self.photoimg6=ImageTk.PhotoImage(img6)
 
-        b6=Button(self.root,image=self.photoimg6,cursor="hand2")
+        b6=Button(self.root,image=self.photoimg6,cursor="hand2",command=self.train_data)
         b6.place(x=900,y=100,width=220,height=220)
 
         L6=Label(self.root,text="Face Train",font=('times now roman', 12,"bold"))
@@ -111,6 +112,11 @@ class Face_recognition_System:
     def face_details(self):
         self.new_window=Toplevel(self.root)
         self.app=Face(self.new_window)
+
+
+    def train_data(self):
+        self.new_window=Toplevel(self.root)
+        self.app=Train(self.new_window)
 
 
 
