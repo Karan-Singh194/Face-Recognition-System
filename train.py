@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
-from tkcalendar import DateEntry
 import subprocess
 import time
 from tkinter import messagebox
@@ -9,7 +8,6 @@ import mysql.connector
 import cv2
 import os
 import numpy as np
-from face import Face 
 
 
 class Train:
