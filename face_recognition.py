@@ -17,12 +17,17 @@ class Face_Recognition:
         self.root.geometry("1300x734+0+0")
         self.root.resizable(0,0)
 
-        title_label=Label(self.root,text="Face Recognition",font=("times new roman",30,"bold"),bg="black",fg="white")
-        title_label.place(x=0,y=0,width=1300,height=50)
+        # title_label=Label(self.root,text="Face Recognition",font=("times new roman",30,"bold"),bg="black",fg="white")
+        # title_label.place(x=0,y=0,width=1300,height=50)
+
+        heading = Label(self.root, text="Face Recognition",font=('times now roman', 35,"bold"),bg="#CFE4FA", fg="blue")
+        heading.place(x=0,y=0,width=1300,height=60)
+
+        self.update(self.root)
 
         train_button=Button(self.root,text="Face Detection",cursor="hand2",command=self.face_recog,
-                            font=("times new roman",20,"bold"),bg="black",fg="white")
-        train_button.place(x=0,y=600,width=1300,height=50)
+                            font=("times new roman",20,"bold"),bg="#CFE4FA",fg="blue")
+        train_button.place(x=500,y=600,width=300,height=50)
 
 
         # face detection
@@ -92,6 +97,13 @@ class Face_Recognition:
                 break
         video_capture.release()
         cv2.destroyAllWindows()
+
+    def update(self, root):
+        subtitlelabel = Label(self.root, text=" ",font=('times now roman', 12,"bold"),bg="#1060B7", fg="#ffffff")
+        subtitlelabel.place(x=0,y=60,width=1300,height=30)
+        date_time=time.strftime(' %B %d, %Y \t\t\t  %I:%M:%S %p on %A ')
+        subtitlelabel.config(text=f"{date_time}" )
+        subtitlelabel.after(1000,self.update, root)
 
 
 

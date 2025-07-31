@@ -7,6 +7,7 @@ import time
 from tkinter import messagebox
 import mysql.connector
 import cv2
+import os
 
 
 class Face:
@@ -176,14 +177,17 @@ class Face:
         button_frame1=Frame(class_student_frame,bd=2,bg="#ffffff")
         button_frame1.place(x=0,y=310,width=620,height=65)
 
-        take_photo_button=Button(button_frame1,command=self.generate_dataset,text="Take Photo Sample",font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
-                                 width=26, cursor="hand2",)
-        take_photo_button.grid(row=0,column=0,columnspan=1,padx=20,pady=(15,0))
+        take_photo_button=Button(button_frame1,command=self.generate_dataset,text="Take Face Sample",font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
+                                 width=20, cursor="hand2",)
+        take_photo_button.grid(row=0,column=0,padx=5,pady=(15,0))
 
-        update_photo_button=Button(button_frame1,text="Update Photo Sample",font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
-                                   width=26, cursor="hand2",)
-        update_photo_button.grid(row=0,column=2,columnspan=3,padx=15,pady=(15,0))
+        update_photo_button=Button(button_frame1,text="Update Face Sample",font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
+                                   width=20, cursor="hand2",)
+        update_photo_button.grid(row=0,column=1,padx=5,pady=(15,0))
 
+        show_face_data=Button(button_frame1,text="Show Face Sample",command=self.open_img,font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
+                                   width=16, cursor="hand2",)
+        show_face_data.grid(row=0,column=2,padx=5,pady=(15,0))
 
 
         # Right frame
@@ -270,7 +274,7 @@ class Face:
         self.fetch_data()  # Fetch data from the database to populate the table
         # self.student_table.bind("<ButtonRelease-1>", self.get_cursor)
 
-        update(self.root)
+        self.update(self.root)
 
 # function declaration
 
@@ -370,7 +374,7 @@ class Face:
                     self.reset_data()   # Reset the form fields after updating data
                     messagebox.showinfo("Success", "Data updated successfully", parent=self.root)
                 else:
-                    if not update:
+                    if not Update:
                         return
             except Exception as e:
                 messagebox.showerror("Error", f"Error due to {str(e)}", parent=self.root)
@@ -487,15 +491,17 @@ class Face:
             except Exception as e:
                 messagebox.showerror("Error", f"Error due to {str(e)}", parent=self.root)
 
-
+        # open data store window
+    def open_img(self):
+        os.startfile("data")
 
         
-def update(a):
-    subtitlelabel = Label(a, text=" ",font=('times now roman', 12,"bold"),bg="#1060B7", fg="#ffffff")
-    subtitlelabel.place(x=0,y=60,width=1300,height=30)
-    date_time=time.strftime(' %B %d, %Y \t\t\t  %I:%M:%S %p on %A ')
-    subtitlelabel.config(text=f"{date_time}" )
-    subtitlelabel.after(1000,update,a)
+    def update(self, root):
+        subtitlelabel = Label(self.root, text=" ",font=('times now roman', 12,"bold"),bg="#1060B7", fg="#ffffff")
+        subtitlelabel.place(x=0,y=60,width=1300,height=30)
+        date_time=time.strftime(' %B %d, %Y \t\t\t  %I:%M:%S %p on %A ')
+        subtitlelabel.config(text=f"{date_time}" )
+        subtitlelabel.after(1000,self.update, root)
 
 
 if __name__ == "__main__":

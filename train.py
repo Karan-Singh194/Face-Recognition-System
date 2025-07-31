@@ -17,12 +17,14 @@ class Train:
         self.root.geometry("1300x734+0+0")
         self.root.resizable(0,0)
 
-        title_label=Label(self.root,text="Face Detail",font=("times new roman",30,"bold"),bg="black",fg="white")
-        title_label.place(x=0,y=0,width=1300,height=50)
+        heading = Label(self.root, text="Train Data",font=('times now roman', 35,"bold"),bg="#CFE4FA", fg="blue")
+        heading.place(x=0,y=0,width=1300,height=60)
 
         train_button=Button(self.root,text="Train Data",cursor="hand2",command=self.train_classifier,
-                            font=("times new roman",20,"bold"),bg="black",fg="white")
-        train_button.place(x=0,y=600,width=1300,height=50)
+                            font=("times new roman",20,"bold"),bg="#CFE4FA",fg="blue")
+        train_button.place(x=500,y=600,width=300,height=50)
+
+        self.update(self.root)
 
     def train_classifier(self):
         data_dir = ("data")
@@ -48,6 +50,13 @@ class Train:
         # Save the model
         cv2.destroyAllWindows()
         messagebox.showinfo("Success", "Training data saved successfully")
+
+    def update(self, root):
+        subtitlelabel = Label(self.root, text=" ",font=('times now roman', 12,"bold"),bg="#1060B7", fg="#ffffff")
+        subtitlelabel.place(x=0,y=60,width=1300,height=30)
+        date_time=time.strftime(' %B %d, %Y \t\t\t  %I:%M:%S %p on %A ')
+        subtitlelabel.config(text=f"{date_time}" )
+        subtitlelabel.after(1000,self.update, root)
 
         
 if __name__ == "__main__":
