@@ -64,7 +64,7 @@ class Face_recognition_System:
         b3=Button(self.root,image=self.photoimg3,cursor="hand2",command=self.face_details)
         b3.place(x=120,y=350,width=220,height=220)
 
-        L3=Label(self.root,text="Settings",font=('times now roman', 12,"bold"))
+        L3=Label(self.root,text="Face Detail",font=('times now roman', 12,"bold"))
         L3.place(x=120,y=545,width=218,height=25)
 
 
