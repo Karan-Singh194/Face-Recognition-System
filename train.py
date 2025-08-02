@@ -21,7 +21,7 @@ class Train:
         heading.place(x=0,y=0,width=1300,height=60)
 
         train_button=Button(self.root,text="Train Data",cursor="hand2",command=self.train_classifier,
-                            font=("times new roman",20,"bold"),bg="#CFE4FA",fg="blue")
+                            font=("times new roman",20,"bold"),bg="#0147bf", fg="#f1f1f1")
         train_button.place(x=500,y=600,width=300,height=50)
 
         self.update(self.root)

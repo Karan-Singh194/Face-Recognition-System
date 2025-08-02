@@ -5,6 +5,7 @@ import time
 from face import Face
 from train import Train
 from face_recognition import Face_Recognition
+from attendance import attendance
 import os
 
 class Face_recognition_System:
@@ -50,10 +51,10 @@ class Face_recognition_System:
         img2=img2.resize((170,170), Image.Resampling.LANCZOS)
         self.photoimg2=ImageTk.PhotoImage(img2)
 
-        b2=Button(self.root,image=self.photoimg2,cursor="hand2")
+        b2=Button(self.root,image=self.photoimg2,cursor="hand2",command=self.attendance)
         b2.place(x=380,y=100,width=220,height=220)
 
-        L2=Label(self.root,text="Attandance",font=('times now roman', 12,"bold"))
+        L2=Label(self.root,text="Attendance",font=('times now roman', 12,"bold"))
         L2.place(x=380,y=295,width=218,height=25)
 
         
@@ -113,6 +114,10 @@ class Face_recognition_System:
     def Face_Recognition(self):
         self.new_window=Toplevel(self.root)
         self.app=Face_Recognition(self.new_window)
+
+    def attendance(self):
+        self.new_window=Toplevel(self.root)
+        self.app=attendance(self.new_window)
 
     # Function to update the date and time
 

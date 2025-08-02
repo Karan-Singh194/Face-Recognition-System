@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 from tkcalendar import DateEntry
 import subprocess
 import time
+import datetime
 from tkinter import messagebox
 import mysql.connector
 import cv2
@@ -20,15 +21,32 @@ class Face_Recognition:
         # title_label=Label(self.root,text="Face Recognition",font=("times new roman",30,"bold"),bg="black",fg="white")
         # title_label.place(x=0,y=0,width=1300,height=50)
 
-        heading = Label(self.root, text="Face Recognition",font=('times now roman', 35,"bold"),bg="#CFE4FA", fg="blue")
+        heading = Label(self.root, text="Face Recognition",font=('times now roman', 35,"bold"),bg="#cfe4fa", fg="blue")
         heading.place(x=0,y=0,width=1300,height=60)
 
         self.update(self.root)
 
         train_button=Button(self.root,text="Face Detection",cursor="hand2",command=self.face_recog,
-                            font=("times new roman",20,"bold"),bg="#CFE4FA",fg="blue")
+                            font=("times new roman",20,"bold"),bg="#0147bf", fg="#f1f1f1")
         train_button.place(x=500,y=600,width=300,height=50)
 
+
+    # mark_attendance
+
+    def mark_attendance(self, i, n, r, d):
+
+        with open("attendance.csv", "r+", newline='') as f:
+            myDataList = f.readlines()
+            id_list = []
+            for line in myDataList:
+                entry = line.split(',')
+                id_list.append(entry[0])
+            if ((i not in id_list)and (r not in id_list) and (n not in id_list) and (d not in id_list)):
+                now = time.strftime('%H:%M:%S')
+                date = time.strftime('%d/%m/%Y')
+                f.writelines(f'\n{i},{r},{n},{d},{now},{date},Present')
+                messagebox.showinfo("Success", "Attendance already marked for this ID")
+        
 
         # face detection
 
@@ -63,10 +81,16 @@ class Face_Recognition:
                 d = my_cursor.fetchone()
                 d="+".join(d)
 
+                my_cursor.execute("SELECT id FROM face WHERE id = "+str(id))
+                i = my_cursor.fetchone()
+                i="+".join(i)
+
                 if confidence > 77:
-                    cv2.putText(img, f"Roll: {r}", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
-                    cv2.putText(img, f"Name: {n}", (x, y - 25), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
-                    cv2.putText(img, f"Department: {d}", (x, y - 45), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
+                    cv2.putText(img, f"Student Id: {i}", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
+                    cv2.putText(img, f"Roll: {r}", (x, y - 25), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
+                    cv2.putText(img, f"Name: {n}", (x, y - 45), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
+                    cv2.putText(img, f"Department: {d}", (x, y - 65), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
+                    self.mark_attendance(i, n, r, d)
                 else:
                     cv2.putText(img, "Unknown face", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
                 coord = [x, y, w, h]
