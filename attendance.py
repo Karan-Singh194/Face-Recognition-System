@@ -42,105 +42,110 @@ class attendance:
         heading.place(x=0,y=0,width=1300,height=60)
 
         # Left frame
-        Left_frame=LabelFrame(faceframe, text="Student Details", font=('times now roman', 15, "bold"), bg="#CFE4FA", fg="black",bd=2,relief=RIDGE)
-        Left_frame.place(x=10,y=100,width=640,height=600)
-
-        current_course_frame=LabelFrame(Left_frame, text="Current Course Details", font=('times now roman', 13, "bold"), bg="#FFFFFF", fg="blue",bd=2,relief=RIDGE)
-        current_course_frame.place(x=3,y=10,width=630,height=150)
-
-        # department
-        dep_label=Label(current_course_frame,text='Department :',font=('roman new time',13,"bold"),bg="#f1f1f1")
-        dep_label.grid(row=0,column=0,padx=(5,5),sticky='w')
-
-        dep_combo=ttk.Combobox(current_course_frame,textvariable=self.var_dep,font=('roman new time',12),state="readonly",cursor="hand2")
-        dep_combo["values"]=("Select Department","Computer","IT","CSE")
-        dep_combo.current(0)
-        dep_combo.grid(row=0,column=1,sticky='w')
-
-        # Course
-        Course_label=Label(current_course_frame,text='Course :',font=('roman new time',13,"bold"),bg="#f1f1f1")
-        Course_label.grid(row=0,column=2,padx=(5,5),sticky='w')
-
-        Course_combo=ttk.Combobox(current_course_frame,textvariable=self.var_course,font=('roman new time',12),state="readonly",cursor="hand2")
-        Course_combo["values"]=("Select Course","AI","ML","DBMS")
-        Course_combo.current(0)
-        Course_combo.grid(row=0,column=3,padx=(0,5),sticky='w')
-
-        
+        Left_frame=LabelFrame(faceframe, text="Attendance Details", font=('times now roman', 15, "bold"), bg="#CFE4FA", fg="blue",bd=2,relief=RIDGE)
+        Left_frame.place(x=10,y=100,width=640,height=550)
 
         # class_student_frame
-        class_student_frame=LabelFrame(Left_frame, text="Class Student information", font=('times now roman', 13, "bold"), bg="#FFFFFF", fg="blue",bd=2,relief=RIDGE)
-        class_student_frame.place(x=3,y=170,width=630,height=400)
+        class_frame=Frame(Left_frame,bg="#FFFFFF",bd=2,relief=RIDGE)
+        class_frame.place(x=3,y=0,width=630,height=500)
 
+        # department
+        dep_label=Label(class_frame,text='Department :',font=('roman new time',13,"bold"),bg="#f1f1f1")
+        dep_label.grid(row=0,column=0,padx=(5,5),pady=(25,5),sticky='w')
 
-        # Student Name
-        Student_name_label=Label(class_student_frame,text='Student Name:',font=('roman new time',13,"bold"),bg="#f1f1f1")
-        Student_name_label.grid(row=0,column=0,padx=(0,5),sticky='w')
-        Student_name_entry=ttk.Entry(class_student_frame,textvariable=self.var_name,font=('roman new time',12),cursor="hand2")
-        Student_name_entry.grid(row=0,column=1,padx=(0,5),pady=5,sticky='w')
+        dep_combo=ttk.Combobox(class_frame,textvariable=self.var_dep,font=('roman new time',12),state="readonly",cursor="hand2")
+        dep_combo["values"]=("Select Department","Computer","IT","CSE")
+        dep_combo.current(0)
+        dep_combo.grid(row=0,column=1,pady=(25,5),sticky='w')
 
-        # Student ID
-        StudentId_label=Label(class_student_frame,text='Student ID:',font=('roman new time',13,"bold"),bg="#f1f1f1")
-        StudentId_label.grid(row=0,column=2,padx=(0,5),sticky='w')
-        StudentId_entry=ttk.Entry(class_student_frame,textvariable=self.var_id,font=('roman new time',12),cursor="hand2")
-        StudentId_entry.grid(row=0,column=3,padx=(0,5),pady=5,sticky='w')
+        # Course
+        Course_label=Label(class_frame,text='Course :',font=('roman new time',13,"bold"),bg="#f1f1f1")
+        Course_label.grid(row=0,column=2,padx=(5,0),pady=(25,5),sticky='w')
+
+        Course_combo=ttk.Combobox(class_frame,textvariable=self.var_course,font=('roman new time',12),state="readonly",cursor="hand2")
+        Course_combo["values"]=("Select Course","AI","ML","DBMS")
+        Course_combo.current(0)
+        Course_combo.grid(row=0,column=3,padx=(0,5),pady=(25,5),sticky='w')
+
+        # Name
+        Student_name_label=Label(class_frame,text='Name :',font=('roman new time',13,"bold"),bg="#f1f1f1")
+        Student_name_label.grid(row=1,column=0,padx=(5,5),pady=(25,5),sticky='w')
+        Student_name_entry=ttk.Entry(class_frame,textvariable=self.var_name,font=('roman new time',12))
+        Student_name_entry.grid(row=1,column=1,padx=(0,5),pady=5,sticky='w')
+
+        # ID
+        StudentId_label=Label(class_frame,text='ID :',font=('roman new time',13,"bold"),bg="#f1f1f1")
+        StudentId_label.grid(row=1,column=2,padx=(5,5),pady=(25,5),sticky='w')
+        StudentId_entry=ttk.Entry(class_frame,textvariable=self.var_id,font=('roman new time',12))
+        StudentId_entry.grid(row=1,column=3,padx=(0,5),pady=5,sticky='w')
 
         # Class Division
-        class_div_label=Label(class_student_frame,text='Class Division:',font=('roman new time',13,"bold"),bg="#f1f1f1")
-        class_div_label.grid(row=1,column=0,padx=(0,5),sticky='w')
-        class_div_entry=ttk.Entry(class_student_frame,textvariable=self.var_div,font=('roman new time',12),cursor="hand2")
-        class_div_entry.grid(row=1,column=1,padx=(0,5),pady=5,sticky='w')
+        class_div_label=Label(class_frame,text='Division :',font=('roman new time',13,"bold"),bg="#f1f1f1")
+        class_div_label.grid(row=2,column=0,padx=(5,5),pady=(25,5),sticky='w')
+        class_div_entry=ttk.Entry(class_frame,textvariable=self.var_div,font=('roman new time',12))
+        class_div_entry.grid(row=2,column=1,padx=(0,5),sticky='w')
 
         # Roll No.
-        roll_no_label=Label(class_student_frame,text='Roll No.:',font=('roman new time',13,"bold"),bg="#f1f1f1")
-        roll_no_label.grid(row=1,column=2,padx=(0,5),sticky='w')
-        roll_no_entry=ttk.Entry(class_student_frame,textvariable=self.var_roll,font=('roman new time',12),cursor="hand2")
-        roll_no_entry.grid(row=1,column=3,padx=(0,5),pady=5,sticky='w')
+        roll_no_label=Label(class_frame,text='Roll No. :',font=('roman new time',13,"bold"),bg="#f1f1f1")
+        roll_no_label.grid(row=2,column=2,padx=(5,5),pady=(25,5),sticky='w')
+        roll_no_entry=ttk.Entry(class_frame,textvariable=self.var_roll,font=('roman new time',12))
+        roll_no_entry.grid(row=2,column=3,padx=(0,5),sticky='w')
 
+        # Time
+        timeing_label=Label(class_frame,text='Timeing :',font=('roman new time',13,"bold"),bg="#ffffff")
+        timeing_label.grid(row=3,column=0,padx=(5,5),pady=(25,5),sticky='w')
+        timeing_entry=ttk.Entry(class_frame,font=('roman new time',13))
+        timeing_entry.grid(row=3,column=1,padx=(0,5),sticky='w')
+
+        # Date
+        date_label=Label(class_frame,text='Date :',font=('roman new time',13,"bold"),bg="#ffffff")
+        date_label.grid(row=3,column=2,padx=(5,5),pady=(25,5),sticky='w')
+        date_entry=ttk.Entry(class_frame,font=('roman new time',13))
+        date_entry.grid(row=3,column=3,padx=(0,5),sticky='w')
         
 
+        # attendance
+        attendance_label=Label(class_frame,text='Attendance :',font=('roman new time',13,"bold"),bg="#ffffff")
+        attendance_label.grid(row=4,column=0,padx=(5,5),pady=(25,5),sticky='w')
+        attendance_combo=ttk.Combobox(class_frame,font=('roman new time',12),state="readonly",cursor="hand2",width=10)
+        attendance_combo["values"]=("Status","Present","Absent")
+        attendance_combo.current(0)
+        attendance_combo.grid(row=4,column=1,padx=(0,5),pady=(25,5),sticky='w')
+
+        # search_entry=Entry(class_frame,font=('roman new time',13),bg='lightyellow',width=15)
+        # search_entry.grid(row=0,column=3)
 
         # button frame
-        button_frame=Frame(class_student_frame,bd=2,bg="#f1f1f1")
-        button_frame.place(x=0,y=260,width=620,height=50)
+        button_frame=Frame(class_frame,bd=2,bg="#f1f1f1")
+        button_frame.place(x=0,y=300,width=620,height=150)
 
         # buttons
-        save_button=Button(button_frame,text="Save",font=("roman new times",14), bg="#0147bf", fg="#fefefe",width=8, cursor="hand2",
-                           command=self.add_data)
-        save_button.grid(row=0,column=0,padx=20)
+        import_button=Button(button_frame,text="Import csv",font=("roman new times",12,"bold"), bg="#0147bf",fg="#ffffff",width=10, cursor="hand2",)
+        import_button.grid(row=0,column=0,padx=(90,20),pady=(20,25))
+
+        export_button=Button(button_frame,text="Export csv",font=("roman new times",12,"bold"), bg="#0147bf",fg="#ffffff",width=10, cursor="hand2",)
+        export_button.grid(row=0,column=1,padx=(35,20),pady=(20,25))
+
+        search_button=Button(button_frame,text="Search",font=("roman new times",12,"bold"), bg="#0147bf",fg="#ffffff",width=10, cursor="hand2",)
+        search_button.grid(row=0,column=2,padx=(35,20),pady=(20,25))
 
 
+        update_button=Button(button_frame,text="Update",font=("roman new times",12,"bold"), bg="#0147bf",fg="#ffffff",width=10, cursor="hand2",)
+        update_button.grid(row=1,column=0,padx=(90,20),pady=(20,25))
+
+        delete_button=Button(button_frame,text="Delete",font=("roman new times",12,"bold"), bg="#0147bf",fg="#ffffff",width=10, cursor="hand2",)
+        delete_button.grid(row=1,column=1,padx=(35,20),pady=(20,25))
+
+        clear_button=Button(button_frame,text="Clear",font=("roman new times",12,"bold"), bg="#0147bf",fg="#ffffff",width=10, cursor="hand2",)
+        clear_button.grid(row=1,column=2,padx=(35,20),pady=(20,25))
 
         # Right frame
-        Right_frame=LabelFrame(faceframe, text="Student List", font=('times now roman', 15, "bold"), bg="#CFE4FA", fg="black",bd=2,relief=RIDGE)
-        Right_frame.place(x=655,y=100,width=640,height=600)
-
-        # Searching frame
-
-        search_frame=LabelFrame(Right_frame, text="Search System", font=('times now roman', 13, "bold"), bg="#FFFFFF", fg="blue",bd=2,relief=RIDGE)
-        search_frame.place(x=3,y=10,width=630,height=85)
-
-        search_label=Label(search_frame,text='Search :',font=('roman new time',13,"bold"),bg="#ffffff")
-        search_label.grid(row=0,column=0,padx=(0,5),sticky='w')
-
-        search_combo=ttk.Combobox(search_frame,font=('roman new time',12),state="readonly",cursor="hand2",width=10)
-        search_combo["values"]=("Search by","Roll No.","Name")
-        search_combo.current(0)
-        search_combo.grid(row=0,column=2,padx=(5,15),pady=(5,5),sticky='w')
-
-        search_entry=Entry(search_frame,font=('roman new time',13),bg='lightyellow',width=15)
-        search_entry.grid(row=0,column=3)
-
-        search_button=Button(search_frame,text="Search",font=("roman new times",12,"bold"), bg="#0147bf",fg="#ffffff",width=8, cursor="hand2",)
-        search_button.grid(row=0,column=4,padx=15)
-
-        show_button=Button(search_frame,text="Show All",font=("roman new times",12,"bold"), bg="#0147bf",fg="#ffffff",width=8, cursor="hand2",)
-        show_button.grid(row=0,column=5)
+        Right_frame=LabelFrame(faceframe, text="Attendance List", font=('times now roman', 15, "bold"), bg="#CFE4FA", fg="blue",bd=2,relief=RIDGE)
+        Right_frame.place(x=655,y=100,width=640,height=550)
 
         # table frame
-
         table_frame=Frame(Right_frame,bd=2,relief=RIDGE)
-        table_frame.place(x=3,y=100,width=630,height=250)
+        table_frame.place(x=3,y=0,width=630,height=500)
 
         scrollx=ttk.Scrollbar(table_frame,orient=HORIZONTAL)
         scrolly=ttk.Scrollbar(table_frame,orient=VERTICAL)
