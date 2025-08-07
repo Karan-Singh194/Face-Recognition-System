@@ -20,6 +20,10 @@ class Train:
         heading = Label(self.root, text="Train Data",font=('times now roman', 35,"bold"),bg="#CFE4FA", fg="blue")
         heading.place(x=0,y=0,width=1300,height=60)
 
+        # back button
+        b=Button(self.root,text="Back",cursor="hand2",font=('times now roman', 20,"bold"),bg="#EF2A2A", fg="white",command=self.root.destroy)
+        b.place(x=1180,y=12,width=100,height=35)
+
         train_button=Button(self.root,text="Train Data",cursor="hand2",command=self.train_classifier,
                             font=("times new roman",20,"bold"),bg="#0147bf", fg="#f1f1f1")
         train_button.place(x=500,y=600,width=300,height=50)

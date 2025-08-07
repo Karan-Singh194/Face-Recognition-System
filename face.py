@@ -41,6 +41,10 @@ class Face:
         heading = Label(faceframe, text="Student Face Detail",font=('times now roman', 35,"bold"),bg="#CFE4FA", fg="blue")
         heading.place(x=0,y=0,width=1300,height=60)
 
+        # back button
+        b=Button(self.root,text="Back",cursor="hand2",font=('times now roman', 20,"bold"),bg="#EF2A2A", fg="white",command=self.root.destroy)
+        b.place(x=1180,y=12,width=100,height=35)
+
         # Left frame
         Left_frame=LabelFrame(faceframe, text="Student Details", font=('times now roman', 15, "bold"), bg="#CFE4FA", fg="black",bd=2,relief=RIDGE)
         Left_frame.place(x=10,y=100,width=640,height=600)
@@ -321,7 +325,7 @@ class Face:
         if len(data) != 0:
             self.student_table.delete(*self.student_table.get_children())
             for row in data:
-                self.student_table.insert('', END, values=row)
+                self.student_table.insert("", END, values=row)
         conn.close()
 
     # get cursor
@@ -422,8 +426,9 @@ class Face:
         self.var_email.set("")
         self.var_phone.set("")
         self.var_address.set("")
-        self.var_radio.set("")
+        self.var_radio.set("")  
         self.fetch_data()
+        self.student_table.selection_remove(self.student_table.selection())
 
     #     # face generate dataset function for take photo sample
     def generate_dataset(self):

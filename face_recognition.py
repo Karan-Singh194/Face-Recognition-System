@@ -24,6 +24,10 @@ class Face_Recognition:
         heading = Label(self.root, text="Face Recognition",font=('times now roman', 35,"bold"),bg="#cfe4fa", fg="blue")
         heading.place(x=0,y=0,width=1300,height=60)
 
+        # back button
+        b=Button(self.root,text="Back",cursor="hand2",font=('times now roman', 20,"bold"),bg="#EF2A2A", fg="white",command=self.root.destroy)
+        b.place(x=1180,y=12,width=100,height=35)
+
         self.update(self.root)
 
         train_button=Button(self.root,text="Face Detection",cursor="hand2",command=self.face_recog,
@@ -33,7 +37,7 @@ class Face_Recognition:
 
     # mark_attendance
 
-    def mark_attendance(self, i, n, r, d):
+    def mark_attendance(self, i, n, r, d, div, c):
 
         with open("attendance.csv", "r+", newline='') as f:
             myDataList = f.readlines()
@@ -41,10 +45,10 @@ class Face_Recognition:
             for line in myDataList:
                 entry = line.split(',')
                 id_list.append(entry[0])
-            if ((i not in id_list)and (r not in id_list) and (n not in id_list) and (d not in id_list)):
+            if ((i not in id_list)and (r not in id_list) and (n not in id_list) and (d not in id_list) and (div not in id_list) and (c not in id_list)):
                 now = time.strftime('%H:%M:%S')
                 date = time.strftime('%d/%m/%Y')
-                f.writelines(f'\n{i},{r},{n},{d},{now},{date},Present')
+                f.writelines(f'\n{i},{r},{n},{d},{c},{div},{now},{date},Present')
                 messagebox.showinfo("Success", "Attendance already marked for this ID")
         
 
@@ -85,12 +89,20 @@ class Face_Recognition:
                 i = my_cursor.fetchone()
                 i="+".join(i)
 
+                my_cursor.execute("SELECT course FROM face WHERE id = "+str(id))
+                c = my_cursor.fetchone()
+                c="+".join(c)
+
+                my_cursor.execute("SELECT `div` FROM face WHERE id = "+str(id))
+                div = my_cursor.fetchone()
+                div="+".join(div)
+
                 if confidence > 77:
                     cv2.putText(img, f"Student Id: {i}", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
                     cv2.putText(img, f"Roll: {r}", (x, y - 25), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
                     cv2.putText(img, f"Name: {n}", (x, y - 45), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
                     cv2.putText(img, f"Department: {d}", (x, y - 65), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
-                    self.mark_attendance(i, n, r, d)
+                    self.mark_attendance(i, n, r, d,c,div)
                 else:
                     cv2.putText(img, "Unknown face", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
                 coord = [x, y, w, h]

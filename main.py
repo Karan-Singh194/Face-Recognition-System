@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+import tkinter
 from PIL import Image, ImageTk
 import time
 from face import Face
@@ -23,7 +24,7 @@ class Face_recognition_System:
         # img5=img5.resize((25,25), Image.Resampling.LANCZOS)
         # self.photoimg5=ImageTk.PhotoImage(img5)
 
-        b=Button(self.root,text="Exit",cursor="hand2",font=('times now roman', 20,"bold"),bg="#EF2A2A", fg="white",command=self.root.destroy)
+        b=Button(self.root,text="Exit",cursor="hand2",font=('times now roman', 20,"bold"),bg="#EF2A2A", fg="white",command=self.i_exit)
         b.place(x=1180,y=12,width=100,height=35)
 
 
@@ -118,6 +119,13 @@ class Face_recognition_System:
     def attendance(self):
         self.new_window=Toplevel(self.root)
         self.app=attendance(self.new_window)
+
+    def i_exit(self):
+        self.i_exit=tkinter.messagebox.askyesno("Face Recongnition", "Are you sure exit this Window",parent=self.root)
+        if self.i_exit >0:
+            self.root.destroy()
+        else:
+            return
 
     # Function to update the date and time
 
