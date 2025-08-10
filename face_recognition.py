@@ -32,7 +32,7 @@ class Face_Recognition:
 
         train_button=Button(self.root,text="Face Detection",cursor="hand2",command=self.face_recog,
                             font=("times new roman",20,"bold"),bg="#0147bf", fg="#f1f1f1")
-        train_button.place(x=500,y=600,width=300,height=50)
+        train_button.place(x=500,y=620,width=300,height=50)
 
 
     # mark_attendance
@@ -49,7 +49,7 @@ class Face_Recognition:
                 now = time.strftime('%H:%M:%S')
                 date = time.strftime('%d/%m/%Y')
                 f.writelines(f'\n{i},{r},{n},{d},{c},{div},{now},{date},Present')
-                messagebox.showinfo("Success", "Attendance already marked for this ID")
+                messagebox.showinfo("Success", "Attendance marked for this ID")
         
 
         # face detection

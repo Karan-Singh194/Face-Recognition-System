@@ -1,12 +1,14 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter
+import webbrowser
 from PIL import Image, ImageTk
 import time
 from face import Face
 from train import Train
 from face_recognition import Face_Recognition
 from attendance import attendance
+from developer import Developer
 import os
 
 class Face_recognition_System:
@@ -80,6 +82,12 @@ class Face_recognition_System:
         L4=Label(self.root,text="Train Data",font=('times now roman', 12,"bold"))
         L4.place(x=380,y=545,width=218,height=25)
 
+
+        L5=Label(self.root,text="Contact us",font=('times now roman', 12,"bold"), fg="blue",bg="#F7EAF8",cursor="hand2")
+        L5.place(x=1110,y=705,width=218,height=25)
+
+        L5.bind("<Button-1>", self.on_click)
+
         # img5=Image.open(r"photos\image.png")
         # img5=img5.resize((170,170), Image.Resampling.LANCZOS)
         # self.photoimg5=ImageTk.PhotoImage(img5)
@@ -119,6 +127,11 @@ class Face_recognition_System:
     def attendance(self):
         self.new_window=Toplevel(self.root)
         self.app=attendance(self.new_window)
+
+    def on_click(self,event):
+        # webbrowser.open("https://www.google.com")  # Open a website
+        self.new_window=Toplevel(self.root)
+        self.app=Developer(self.new_window)
 
     def i_exit(self):
         self.i_exit=tkinter.messagebox.askyesno("Face Recongnition", "Are you sure exit this Window",parent=self.root)

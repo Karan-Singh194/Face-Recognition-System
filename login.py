@@ -9,7 +9,6 @@ from database import connect_database
 
 def login():
     username = entry_username.get()
-    password = entry_password.get()
 
     # Database connection
     cursor, connection = connect_database()
@@ -17,8 +16,8 @@ def login():
         return
 
     cursor.execute("USE face_system")
-    query = "SELECT user_type, name FROM employee_data WHERE empid = %s AND password = %s"
-    cursor.execute(query, (username, password))
+    query = "SELECT name FROM face WHERE id =%s"
+    cursor.execute(query,(str(username)))
     result = cursor.fetchone()
 
     connection.close()
@@ -26,13 +25,8 @@ def login():
     if result:
         user_type = result[0]
         
-        
-        if user_type == "Admin":
-            subprocess.Popen([sys.executable, "dashboard.py"])
-            window.destroy()
-
-        elif user_type == "Employee":
-            subprocess.Popen([sys.executable, "billing.py"]) 
+        if user_type == "karan":
+            subprocess.Popen([sys.executable, "main.py"])
             window.destroy()
             
     else:
