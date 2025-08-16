@@ -28,6 +28,9 @@ class Train:
                             font=("times new roman",20,"bold"),bg="#0147bf", fg="#f1f1f1")
         train_button.place(x=500,y=600,width=300,height=50)
 
+        frame_box=Frame(self.root,bg="#61BAEE")
+        frame_box.place(x=420,y=95,width=470,height=490)
+
         self.update(self.root)
 
     def train_classifier(self):

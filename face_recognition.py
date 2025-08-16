@@ -34,12 +34,15 @@ class Face_Recognition:
                             font=("times new roman",20,"bold"),bg="#0147bf", fg="#f1f1f1")
         train_button.place(x=500,y=620,width=300,height=50)
 
+        frame_box=Frame(self.root,bg="#61BAEE")
+        frame_box.place(x=337,y=93,width=650,height=520)
+
 
     # mark_attendance
 
     def mark_attendance(self, i, n, r, d, div, c):
 
-        with open("attendance.csv", "r+", newline='') as f:
+        with open("attendance\\attendance.csv", "r+", newline='') as f:
             myDataList = f.readlines()
             id_list = []
             for line in myDataList:

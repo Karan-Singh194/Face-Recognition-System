@@ -3,12 +3,15 @@ from tkinter import messagebox
 import subprocess
 import sys 
 from PIL import Image, ImageTk
+import mysql.connector
+import pymysql
 from database import connect_database
 
 
 
 def login():
     username = entry_username.get()
+    password = entry_password.get()
 
     # Database connection
     cursor, connection = connect_database()
@@ -16,22 +19,19 @@ def login():
         return
 
     cursor.execute("USE face_system")
-    query = "SELECT name FROM face WHERE id =%s"
-    cursor.execute(query,(str(username)))
+    query = "SELECT name FROM admin WHERE id =%s AND password = %s"
+    cursor.execute(query, (username,password))
     result = cursor.fetchone()
 
     connection.close()
 
     if result:
-        user_type = result[0]
-        
-        if user_type == "karan":
-            subprocess.Popen([sys.executable, "main.py"])
-            window.destroy()
+        name = result[0]
+        subprocess.Popen([sys.executable, "main.py"])
+        window.destroy()
             
     else:
         messagebox.showerror("Login Failed", "Invalid username or password")
-
 
 
 def clear_fields():

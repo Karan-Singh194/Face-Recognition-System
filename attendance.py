@@ -216,7 +216,7 @@ class attendance:
 
         # If first time calling, directly load attendance.csv
         if first_time:
-            fin = os.path.join(os.getcwd(), "attendance.csv")
+            fin = os.path.join(os.getcwd(), "attendance\\attendance.csv")
         else:
             fin = filedialog.askopenfilename(
                 initialdir=os.getcwd(),
