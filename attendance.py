@@ -199,6 +199,7 @@ class attendance:
         # self.fetch_data()  # Fetch data from the database to populate the table
 
         self.update(self.root)
+        self.importcsv(first_time=True)
 
 # function declaration
 
@@ -209,15 +210,29 @@ class attendance:
             self.attendance_table.insert("", END, values=row)
 
     # import csv
-    def importcsv(self):
+    def importcsv(self, first_time=False):
         global mydata
         mydata.clear()
-        fin=filedialog.askopenfilename(initialdir=os.getcwd(),title="Open CSV",filetypes=(("CSV File","*.csv"),("All File","*.*")),parent=self.root)
-        with open(fin) as myfile:
-            csvread=csv.reader(myfile,delimiter=",")
-            for i in csvread:
-                mydata.append(i)
+
+        # If first time calling, directly load attendance.csv
+        if first_time:
+            fin = os.path.join(os.getcwd(), "attendance.csv")
+        else:
+            fin = filedialog.askopenfilename(
+                initialdir=os.getcwd(),
+                title="Open CSV",
+                filetypes=(("CSV File", "*.csv"), ("All File", "*.*")),
+                parent=self.root
+            )
+
+        # Only proceed if file exists
+        if fin and os.path.exists(fin):
+            with open(fin) as myfile:
+                csvread = csv.reader(myfile, delimiter=",")
+                for i in csvread:
+                    mydata.append(i)
             self.fetch_data(mydata)
+
 
     #   export csv
     def exportcsv(self):

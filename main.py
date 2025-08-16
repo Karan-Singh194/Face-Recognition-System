@@ -30,7 +30,7 @@ class Face_recognition_System:
         b.place(x=1180,y=12,width=100,height=35)
 
 
-        # bg
+        # bg``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
         img=Image.open(r"photos\bg1.png")
         img=img.resize((1300,734), Image.Resampling.LANCZOS)
         self.photoimg=ImageTk.PhotoImage(img)
