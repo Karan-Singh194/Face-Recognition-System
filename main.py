@@ -150,7 +150,10 @@ class Face_recognition_System:
         subtitlelabel.config(text=f"{date_time}" )
         subtitlelabel.after(1000,self.update, root)
 
-
+def run_main():
+    root = Tk()
+    obj = Face_recognition_System(root)
+    root.mainloop()
 
 if __name__ == "__main__":
     root=Tk()

@@ -97,8 +97,11 @@ class Login:
         if result:
             name = result[0]
             messagebox.showinfo("Login Successful", f"Welcome, {name}!")
-            subprocess.Popen([sys.executable, "main.py"])
-            self.root.destroy()
+            self.root.destroy()   # close login window
+
+            import main
+            main.run_main()
+
                 
         else:
             messagebox.showerror("Login Failed", "Invalid username or password")
