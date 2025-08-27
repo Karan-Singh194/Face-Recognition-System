@@ -9,7 +9,7 @@ if sys.platform == 'win32':
 os.environ['TCL_LIBRARY'] = r"C:\Users\rs966\AppData\Local\Programs\Python\Python39\tcl\tcl8.6"
 os.environ['TK_LIBRARY'] = r"C:\Users\rs966\AppData\Local\Programs\Python\Python39\tcl\tk8.6"
 
-executables = [cx_Freeze.Executable("Face_Recognition_Software.py", base=base, icon="face.ico")]
+executables = [cx_Freeze.Executable("Face_Recognition_System.py", base=base, icon="face.ico")]
 
 
 cx_Freeze.setup(
