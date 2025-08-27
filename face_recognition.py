@@ -17,6 +17,7 @@ class Face_Recognition:
         self.root.title("Face Recognition")
         self.root.geometry("1300x734+0+0")
         self.root.resizable(0,0)
+        self.root.wm_iconbitmap("face.ico")
 
         # title_label=Label(self.root,text="Face Recognition",font=("times new roman",30,"bold"),bg="black",fg="white")
         # title_label.place(x=0,y=0,width=1300,height=50)

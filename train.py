@@ -16,6 +16,7 @@ class Train:
         self.root.title("Train Data")
         self.root.geometry("1300x734+0+0")
         self.root.resizable(0,0)
+        self.root.wm_iconbitmap("face.ico")
 
         heading = Label(self.root, text="Train Data",font=('times now roman', 35,"bold"),bg="#CFE4FA", fg="blue")
         heading.place(x=0,y=0,width=1300,height=60)

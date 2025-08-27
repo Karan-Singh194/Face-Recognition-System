@@ -16,6 +16,7 @@ class Face:
         self.root.title("Face detail")
         self.root.geometry("1300x734+0+0")
         self.root.resizable(0,0)
+        self.root.wm_iconbitmap("face.ico")
 
                 # variables
         self.var_dep=StringVar()

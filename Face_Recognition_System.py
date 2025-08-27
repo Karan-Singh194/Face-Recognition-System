@@ -56,6 +56,7 @@ window = Tk()
 window.title("Login")
 window.geometry("1000x634+0+0")
 window.resizable(0,0)
+window.wm_iconbitmap("face.ico")
 
 # # Background Image
 bg_icon=Image.open(r"photos\bg2.png")
