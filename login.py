@@ -5,7 +5,7 @@ import sys
 from PIL import Image, ImageTk
 import mysql.connector
 import pymysql
-from database import connect_database
+# from database import connect_database
 
 
 
@@ -40,6 +40,16 @@ def clear_fields():
 
 def on_hover(button, color):
     button.config(bg=color)
+
+def connect_database():
+    try:
+        connection=mysql.connector.connect(host="localhost", user="root", password="1234")
+        cursor = connection.cursor()
+    except:
+        messagebox.showerror('Error', 'Database connectivity issue , open mysql command line client')
+        return None, None
+
+    return cursor,connection
 
 # Create login window
 window = Tk()
