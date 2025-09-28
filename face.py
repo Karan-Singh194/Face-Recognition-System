@@ -16,7 +16,7 @@ class Face:
         self.root.title("Face detail")
         self.root.geometry("1300x734+0+0")
         self.root.resizable(0,0)
-        self.root.wm_iconbitmap("face.ico")
+        self.root.wm_iconbitmap("face-icon.ico")
 
                 # variables
         self.var_dep=StringVar()
@@ -175,23 +175,23 @@ class Face:
                              command=self.delete_data)
         delete_button.grid(row=0,column=2,padx=20)
 
-        reset_button=Button(button_frame,text="Reset",font=("roman new times",14), bg="#0147bf", fg="#cfe4fa",width=8, cursor="hand2",
+        reset_button=Button(button_frame,text="Clear",font=("roman new times",14), bg="#0147bf", fg="#cfe4fa",width=8, cursor="hand2",
                             command=self.reset_data)
         reset_button.grid(row=0,column=3,padx=20)
 
         button_frame1=Frame(class_student_frame,bd=2,bg="#ffffff")
         button_frame1.place(x=0,y=310,width=620,height=65)
 
-        take_photo_button=Button(button_frame1,command=self.generate_dataset,text="Take Face Sample",font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
-                                 width=20, cursor="hand2",)
+        take_photo_button=Button(button_frame1,text="Take Face Sample",font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
+                                 command=self.generate_dataset,width=20, cursor="hand2",)
         take_photo_button.grid(row=0,column=0,padx=5,pady=(15,0))
 
         update_photo_button=Button(button_frame1,text="Update Face Sample",font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
                                    width=20, cursor="hand2",)
         update_photo_button.grid(row=0,column=1,padx=5,pady=(15,0))
 
-        show_face_data=Button(button_frame1,text="Show Face Sample",command=self.open_img,font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
-                                   width=16, cursor="hand2",)
+        show_face_data=Button(button_frame1,text="Show Face Sample",font=("roman new times",12,"bold"), bg="#0147bf", fg="#cfe4fa",
+                                   command=self.open_img,width=16, cursor="hand2",)
         show_face_data.grid(row=0,column=2,padx=5,pady=(15,0))
 
 
@@ -353,7 +353,7 @@ class Face:
 
 
         # update function
-    def update_data(self):
+    def update_data(self,up=False):
         if self.var_dep.get()=="Select Department" or self.var_name.get()=="" or self.var_id.get()=="" :
             messagebox.showerror("Error","All fields are required",parent=self.root)
         else:
@@ -365,19 +365,25 @@ class Face:
                         user="root",
                         password="1234",
                         database="face_system"
-                )
+                )   
+                    id = self.var_id.get()
+                    r = 'No'
+                    if up == True:
+                        r = 'Yes'
+
                     cursor = conn.cursor()
                     cursor.execute("UPDATE face SET dep=%s, course=%s, year=%s, sem=%s, name=%s, `div`=%s, roll=%s, gender=%s, dob=%s, email=%s, phone=%s, address=%s, photo=%s WHERE id=%s",
                         (self.var_dep.get(), self.var_course.get(), self.var_year.get(), 
                          self.var_sem.get(), self.var_name.get(), self.var_div.get(), 
                          self.var_roll.get(), self.var_gender.get(), self.var_dob.get(), 
                          self.var_email.get(), self.var_phone.get(), self.var_address.get(), 
-                         self.var_radio.get(), self.var_id.get()))
+                         r, self.var_id.get()))
                     conn.commit()
                     self.fetch_data()
                     conn.close()
                     self.reset_data()   # Reset the form fields after updating data
                     messagebox.showinfo("Success", "Data updated successfully", parent=self.root)
+                    return id
                 else:
                     if not Update:
                         return
@@ -437,41 +443,16 @@ class Face:
             messagebox.showerror("Error","All fields are required",parent=self.root)
         else:
             try:
-                conn = mysql.connector.connect(
-                        host="localhost",
-                        user="root",
-                        password="1234",
-                        database="face_system"
-                )
-                cursor = conn.cursor()
-                cursor.execute("select * from face")
-                row = cursor.fetchall()
-                id = 0
-                for r in row:
-                    id += 1
-                cursor.execute("UPDATE face SET dep=%s, course=%s, year=%s, sem=%s, name=%s, `div`=%s, roll=%s, gender=%s, dob=%s, email=%s, phone=%s, address=%s, photo=%s WHERE id=%s",
-                    (self.var_dep.get(), self.var_course.get(), self.var_year.get(), 
-                    self.var_sem.get(), self.var_name.get(), self.var_div.get(), 
-                    self.var_roll.get(), self.var_gender.get(), self.var_dob.get(), 
-                    self.var_email.get(), self.var_phone.get(), self.var_address.get(), 
-                    self.var_radio.get(), self.var_id.get()==id+1))
-                conn.commit()
-                self.fetch_data()  # Refresh the table after adding data    
-                self.reset_data()  # Reset the form fields after adding data
-                conn.close()  
-
+                id = self.update_data(up=True)
                 # load predifine data on face fronttals from opencv
                 face_classifier = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-
                 def face_cropped(img):
                     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                     faces = face_classifier.detectMultiScale(gray, 1.3, 5)
-
                     for (x, y, w, h) in faces:
                         face_cropped = img[y:y+h, x:x+w]
                         return face_cropped  
                     
-
                 cap = cv2.VideoCapture(0)
                 img_id = 0
                 while True:
@@ -488,7 +469,6 @@ class Face:
                         cv2.imwrite(file_name_path, face)
                         cv2.putText(face, str(img_id), (50, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0), 2)
                         cv2.imshow("Cropped Face", face)
-
                     if cv2.waitKey(1) == 13 or img_id == 100:
                         break
                 cap.release()

@@ -1,12 +1,12 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter
-import webbrowser
+# import webbrowser
 from PIL import Image, ImageTk
 import time
 from face import Face
 from train import Train
-from face_recognition import Face_Recognition
+from face_recognition1 import Face_Recognition
 from attendance import attendance
 from developer import Developer
 import os
@@ -18,7 +18,7 @@ class Face_recognition_System:
         self.root.title("Admin Page")
         self.root.geometry("1300x734+0+0")
         self.root.resizable(0,0)
-        self.root.wm_iconbitmap("face.ico")
+        self.root.wm_iconbitmap("face-icon.ico")
 
         self.heading = Label(self.root, text="Face Recognition Attendance System",font=('times now roman', 35,"bold"),bg="#CFE4FA", fg="blue")
         self.heading.place(x=0,y=0,width=1300,height=60)

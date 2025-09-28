@@ -16,7 +16,7 @@ class Train:
         self.root.title("Train Data")
         self.root.geometry("1300x734+0+0")
         self.root.resizable(0,0)
-        self.root.wm_iconbitmap("face.ico")
+        self.root.wm_iconbitmap("face-icon.ico")
 
         heading = Label(self.root, text="Train Data",font=('times now roman', 35,"bold"),bg="#CFE4FA", fg="blue")
         heading.place(x=0,y=0,width=1300,height=60)
@@ -58,6 +58,7 @@ class Train:
         # Save the model
         cv2.destroyAllWindows()
         messagebox.showinfo("Success", "Training data saved successfully")
+        self.root.destroy()
 
     def update(self, root):
         subtitlelabel = Label(self.root, text=" ",font=('times now roman', 12,"bold"),bg="#1060B7", fg="#ffffff")
