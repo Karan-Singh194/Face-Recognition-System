@@ -136,8 +136,8 @@ class Login:
             messagebox.showinfo("Login Successful", f"Welcome, {name}!")
             self.root.destroy()   # close login window
 
-            import main
-            main.run_main()
+            import dashboard
+            dashboard.run_main()
                 
         else:
             messagebox.showerror("Login Failed", "Invalid username or password")

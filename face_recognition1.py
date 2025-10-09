@@ -24,7 +24,6 @@ import csv
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 mydata=[]
 count = 0
-
 class Face_Recognition:
 
     def __init__(self,root:tk.Tk):
@@ -39,94 +38,203 @@ class Face_Recognition:
         except Exception as e:
             logging.warning(f"Could not load icon: {e}")
 
-        # Initialize components
+        # MODIFIED: Initialize variables for camera and recognition
         self.is_running = False
         self.video_capture = None
         self.face_cascade = None
-        self.recognizer = None
+        self.clf = None
+        self.photo = None
 
-        # Database configuration
-        self.db_config = {
-            'host': "localhost",
-            'user': "root",
-            'password': "1234",
-            'database': "face_system"
-        }
+        # Database configuration (assuming it's correct)
+        # ... (your db_config remains the same)
 
         # Setup GUI
         self._setup_gui()
-        
-        # Load face detection models
-        # self._load_models()
         
         # Start clock update
         self._update_clock()
 
     def _setup_gui(self):
-        # Heading
-        heading = Label(self.root, text="Face Recognition",font=('times now roman', 35,"bold"),bg="#cfe4fa", fg="blue")
-        heading.place(x=0,y=0,width=1300,height=60)
+        # Main Heading
+        heading = Label(self.root, text="Face Recognition Attendance", font=('Helvetica', 30, "bold"), bg="#cfe4fa", fg="#002D62")
+        heading.place(x=0, y=0, width=1300, height=60)
 
-        # Date/Time label
-        self.datetime_label = tk.Label(
-            self.root, 
-            text="",
-            font=('times new roman', 12, "bold"),
-            bg="#1060B7", 
-            fg="#ffffff"
-        )
+        # Date/Time Bar
+        self.datetime_label = tk.Label(self.root, text="", font=('Helvetica', 12, "bold"), bg="#1060B7", fg="white")
         self.datetime_label.place(x=0, y=60, width=1300, height=30)
 
+        # Back Button
+        back_button = Button(self.root, text="Back", cursor="hand2", font=('Helvetica', 17, "bold"), bg="#FF0C0C", fg="white", activebackground="#FF022C", command=self.i_exit)
+        back_button.place(x=1180, y=10, width=100, height=40)
 
-        # back button
-        b=Button(self.root,text="Back",cursor="hand2",font=('times now roman', 20,"bold"),bg="#EF2A2A", fg="white",command=self.i_exit)
-        b.place(x=1180,y=12,width=100,height=35)
+        # Right Frame for Video Feed
+        video_frame = Frame(self.root, bg="black", bd=2, relief=RIDGE)
+        video_frame.place(x=640, y=95, width=650, height=490)
+        
+        # Label that will hold the camera feed
+        self.video_label = Label(video_frame, text="CAMERA OFF", font=('Arial', 20, 'bold'), fg='white', bg='black')
+        self.video_label.pack(fill=BOTH, expand=True)
 
-
-        frame_box=Frame(self.root,bg="#61BAEE")
-        frame_box.place(x=637,y=93,width=650,height=520)
-
-        # Status label inside frame
-        self.status = tk.Label(
-            self.root,
-            text="Click Above ⬆️",
-            font=('times new roman', 15,'bold'),
-            fg="green"
-        )
-        self.status.place(x=820, y=670)
-
-
-        Face_Detection=Button(self.root,text="Face Detection",cursor="hand2",command=self.start_face_recognition,
-                            font=("times new roman",20,"bold"),bg="#0147bf", fg="#f1f1f1")
-        Face_Detection.place(x=820,y=620,width=300,height=50)
-
-        self.status_label = tk.Label(self.root, text="System was ready✔️You can mark your Attendance", fg="green", font=("Arial", 12, 'bold'))
-        self.status_label.place(x=3, y= 570)
-
-        self.status_label_1 = tk.Label(self.root, text="Click on Face Detection Button ", fg="green", font=("Arial", 12, 'bold'))
-        self.status_label_1.place(x=3, y= 600)
+        # Left Frame (unchanged)
         self.table()
 
+        # Control and Status Area
+        control_frame = Frame(self.root, bg="#CFE4FA", bd=2, relief=RIDGE)
+        control_frame.place(x=640, y=590, width=650, height=130)
+
+        # The button remains the same
+        self.face_detection_button = Button(control_frame, text="Start Face Detection", cursor="hand2", command=self.toggle_face_recognition,
+                                            font=("Helvetica", 18, "bold"), bg="#0147bf", fg="white",
+                                            activebackground="#002D62", activeforeground="white")
+        self.face_detection_button.pack(pady=10, ipady=10, fill=X, padx=20)
+
+        # MODIFIED: Re-adding the two status labels
+        # Label for general system status (at the very bottom)
+        self.status_label = tk.Label(control_frame, text="System is ready. Click Start to begin.", fg="green", bg="#CFE4FA", font=("Helvetica", 12, 'italic'))
+        self.status_label.pack(fill=X, side=BOTTOM, pady=(0,5))
+        
+        # Label for specific attendance messages (just above the general one)
+        self.status_label_1 = tk.Label(self.Left_frame, text="", fg="blue", bg="#CFE4FA", font=("Helvetica", 12, 'bold'))
+        self.status_label_1.place(x=3, y=420)
+
+
+    # NEW: This method handles the button clicks
+    def toggle_face_recognition(self):
+        """Starts or stops the face recognition process."""
+        if self.is_running:
+            self.stop_face_recognition()
+        else:
+            self.start_face_recognition()
+
+    # MODIFIED: This is the new core video loop
+    def update_video_feed(self):
+        """Reads a frame, processes it for face recognition, and displays it on the Tkinter label."""
+        if not self.is_running:
+            return
+
+        ret, img = self.video_capture.read()
+        if ret:
+            # Resize the frame to fit the label (650x520)
+            img = cv2.resize(img, (650, 520))
+            
+            # Process the image for recognition
+            processed_img = self._recognize(img)
+
+            # Convert the image for Tkinter display
+            img_rgb = cv2.cvtColor(processed_img, cv2.COLOR_BGR2RGB)
+            self.photo = ImageTk.PhotoImage(image=Image.fromarray(img_rgb))
+            
+            # Update the label with the new frame
+            self.video_label.configure(image=self.photo)
+
+        # Repeat this function after 15 milliseconds
+        self.video_label.after(15, self.update_video_feed)
+
+    # NEW: The recognition logic is now a helper method
+    def _recognize(self, img):
+        """Helper function to run the recognition on a single image frame."""
+        coord = self._draw_boundary(img, self.face_cascade, 1.1, 10, (255, 25, 255), "Face", self.clf)
+        return img
+
+    # NEW: The boundary drawing logic is also a helper method
+    def _draw_boundary(self, img, classifier, scaleFactor, minNeighbors, color, text, clf):
+        gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        features = classifier.detectMultiScale(gray_image, scaleFactor, minNeighbors)
+
+        for (x, y, w, h) in features:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 3)
+            id_num, predict = clf.predict(gray_image[y:y + h, x:x + w])
+            confidence = int((100 * (1 - predict / 300)))
+
+            try:
+                conn = mysql.connector.connect(host="localhost", user="root", password="1234", database="face_system")
+                my_cursor = conn.cursor()
+
+                # Fetch student data based on predicted ID
+                my_cursor.execute("SELECT name, roll, dep, id, course, `div` FROM face WHERE id=%s", (id_num,))
+                result = my_cursor.fetchone()
+
+                if result and confidence > 77:
+                    n, r, d, i, c, div = result
+                    cv2.putText(img, f"Student Id: {i}", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
+                    cv2.putText(img, f"Roll: {r}", (x, y - 25), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
+                    cv2.putText(img, f"Name: {n}", (x, y - 45), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
+                    self.mark_attendance(str(i), n, r, d, c, div)
+                else:
+                    cv2.putText(img, "Unknown face", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (0,0,255), 2)
+                
+                conn.close()
+            except Exception as e:
+                logging.error(f"Database error: {e}")
+
+        return img
+
+
+    def start_face_recognition(self):
+        try:
+            self.face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+            self.clf = cv2.face.LBPHFaceRecognizer_create()
+            self.clf.read("classifier.xml")
+        except cv2.error as e:
+            messagebox.showerror("Error", "Failed to load model files...", parent=self.root)
+            return
+
+        self.video_capture = cv2.VideoCapture(0)
+        if not self.video_capture.isOpened():
+            messagebox.showerror("Error", "Could not open webcam.", parent=self.root)
+            return
+        
+        self.is_running = True
+        
+        # Update button and status messages
+        self.face_detection_button.config(text="Stop Face Detection", bg="#D2042D", activebackground="#A50021")
+        self.status_label.config(text="Detection Active: Looking for faces...", fg="#002D62")
+        self.status_label_1.config(text="") # Clear previous attendance message
+        
+        self.video_label.config(text="")
+        self.update_video_feed()
+
+    def stop_face_recognition(self):
+        self.is_running = False
+        if self.video_capture:
+            self.video_capture.release()
+        
+        if hasattr(self, 'video_label'):
+            self.video_label.config(image='')
+            self.photo = None
+            self.video_label.config(text="CAMERA OFF", font=('Arial', 20, 'bold'), fg='white', bg='black')
+
+        # Update button and status messages
+        self.face_detection_button.config(text="Start Face Detection", bg="#0147bf", activebackground="#002D62")
+        self.status_label.config(text="System is ready. Click Start to begin.", fg="green")
+        self.status_label_1.config(text="") # Clear previous attendance message
+                
+    def i_exit(self): 
+        self.stop_face_recognition()
+        self.root.destroy()
+        
+    # --- All your other methods (table, fetch_data, importcsv, mark_attendance, _update_clock) remain exactly the same ---
+    # ... (paste your other methods here unchanged) ...
     def table(self):
 
         # Right frame
-        Left_frame=LabelFrame(self.root, text="Attendance List", font=('times now roman', 15, "bold"), bg="#CFE4FA", fg="blue",bd=2,relief=RIDGE)
-        Left_frame.place(x=10,y=100,width=620,height=450)
+        self.Left_frame=LabelFrame(self.root, text="Attendance List", font=('times now roman', 15, "bold"), bg="#CFE4FA", fg="blue",bd=2,relief=RIDGE)
+        self.Left_frame.place(x=10,y=100,width=620,height=500)
         
         # table frame
-        table_frame=Frame(Left_frame,bd=2,relief=RIDGE)
+        table_frame=Frame(self.Left_frame,bd=2,relief=RIDGE)
         table_frame.place(x=3,y=0,width=600,height=400)
 
         scrollx=ttk.Scrollbar(table_frame,orient=HORIZONTAL)
         scrolly=ttk.Scrollbar(table_frame,orient=VERTICAL)
 
         self.attendance_table=ttk.Treeview(table_frame,columns=("id","roll",'name','dep', 'course',"div"
-                                                              ,"time","date","attendance"),show='headings',
-                              yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
+                                                                ,"time","date","attendance"),show='headings',
+                                yscrollcommand=scrolly.set,xscrollcommand=scrollx.set)
 
         scrollx.pack(side=BOTTOM,fill=X)
         scrolly.pack(side=RIGHT,fill=Y)
- 
+
         scrollx.config(command=self.attendance_table.xview)
         scrolly.config(command=self.attendance_table.yview)
 
@@ -184,7 +292,7 @@ class Face_Recognition:
                 parent=self.root
             )
 
-               # Only proceed if file exists
+            # Only proceed if file exists
         if fin and os.path.exists(fin):
             with open(fin) as myfile:
                 csvread = csv.reader(myfile, delimiter=",")
@@ -192,8 +300,6 @@ class Face_Recognition:
                     mydata.append(i)
             self.fetch_data(mydata)
 
-
-    # mark_attendance
     def mark_attendance(self, i, n, r, d, div, c):
         with open("attendance\\attendance.csv", "r+", newline='') as f:
             myDataList = f.readlines()
@@ -202,7 +308,7 @@ class Face_Recognition:
 
             for line in myDataList:
                 entry = line.strip().split(',')
-                if entry[0] == i and entry[-2] == today_date:  # ID and Date match
+                if len(entry) > 1 and entry[0] == i and entry[-2] == today_date:
                     already_marked_today = True
                     break
 
@@ -210,132 +316,13 @@ class Face_Recognition:
                 now = time.strftime('%H:%M:%S')
                 f.writelines(f'\n{i},{r},{n},{d},{div},{c},{now},{today_date},Present')
                 
-                # Update label 
-                self.status_label.config(text=f"Attendance marked, Name: {n}, Roll No: {i}, Timing: {now}, {today_date}", fg="green")
-                # self.attendance_table.delete(*self.attendance_table.get_children())
+                # MODIFIED: Send success message to status_label_1
+                self.status_label_1.config(text=f"Attendance Marked: {n} ({r})", fg="green")
                 self.importcsv(first_time=True)
-                global count
-                count = 0
             else:
-                # Show warning on label
-                self.status_label_1.config(text=f"Attendance already marked today for Name: {n}, Roll No: {i}", fg="red")
-                self.status.config(text=f"Warning, click on Enter button ", fg="green")
-
-                
-                if count == 2:
-                    return 
+                # MODIFIED: Send warning message to status_label_1
+                self.status_label_1.config(text=f"Attendance already marked for {n} today.", fg="red")
                 self.importcsv(first_time=True)
-                count = count + 1
-
-
-    def start_face_recognition(self):
-        # import threading
-        self.is_running = True
-        # threading.Thread(target=self.face_recog, daemon=True).start()
-        self.recognition_thread = threading.Thread(target=self.face_recog, daemon=True)
-        self.recognition_thread.start()
-
-
-        # face detection
-
-    def face_recog(self):
-        def draw_boundary(img, classifier, scaleFactor, minNeighbors, color, text,clf):
-            gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            features = classifier.detectMultiScale(gray_image, scaleFactor, minNeighbors)
-            coord = []
-
-            for (x, y, w, h) in features:
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 3)
-                id, predict = clf.predict(gray_image[y:y + h, x:x + w])
-                confidence = int((100 * (1 - predict / 300)))
-
-                conn = mysql.connector.connect(
-                    host="localhost",
-                    user="root",
-                    password="1234",
-                    database="face_system"
-                )
-                my_cursor = conn.cursor()
-
-                my_cursor.execute("SELECT name FROM face WHERE id = "+str(id))
-                n = my_cursor.fetchone()
-                n="+".join(n)
-
-                my_cursor.execute("SELECT roll FROM face WHERE id = "+str(id))
-                r = my_cursor.fetchone()
-                r="+".join(r)
-
-                my_cursor.execute("SELECT dep FROM face WHERE id = "+str(id))
-                d = my_cursor.fetchone()
-                d="+".join(d)
-
-                my_cursor.execute("SELECT id FROM face WHERE id = "+str(id))
-                i = my_cursor.fetchone()
-                i="+".join(i)
-
-                my_cursor.execute("SELECT course FROM face WHERE id = "+str(id))
-                c = my_cursor.fetchone()
-                c="+".join(c)
-
-                my_cursor.execute("SELECT `div` FROM face WHERE id = "+str(id))
-                div = my_cursor.fetchone()
-                div="+".join(div)
-
-                if confidence > 77:
-                    cv2.putText(img, f"Student Id: {i}", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
-                    cv2.putText(img, f"Roll: {r}", (x, y - 25), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
-                    cv2.putText(img, f"Name: {n}", (x, y - 45), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
-                    cv2.putText(img, f"Department: {d}", (x, y - 65), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
-                    self.mark_attendance(i, n, r, d,c,div)
-                else:
-                    cv2.putText(img, "Unknown face", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255,255,255), 2)
-                coord = [x, y, w, h]
-
-            return coord
-        
-        
-        def recognize(img,clf,face_cascade):
-            coord= draw_boundary(img, face_cascade, 1.1, 10, (255,25,255), "Face", clf)
-            return img
-
-        face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-        clf = cv2.face.LBPHFaceRecognizer_create()
-        clf.read("classifier.xml")
-
-        cv2.namedWindow("Face Recognition", cv2.WINDOW_NORMAL)
-        cv2.resizeWindow("Face Recognition", 640, 480)
-
-        # Small delay to let window appear
-        time.sleep(0.5)
-
-        # Get handle for OpenCV window
-        hwnd = win32gui.FindWindow(None, "Face Recognition")
-
-        # Force window always on top
-        win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST,
-                            0, 0, 0, 0,
-                            win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
-
-        video_capture = cv2.VideoCapture(0)
-
-
-        while self.is_running:
-            ret, img = video_capture.read()
-            if not ret:
-                print("Failed to grab frame")
-                break
-
-            img=recognize(img, clf,face_cascade)
-            cv2.imshow("Face Recognition", img)
-
-            if cv2.waitKey(1)==13:
-                self.status.config(text=f"Click Above ⬆️ ", fg="green")
-                video_capture.release()
-                cv2.destroyAllWindows()
-                self.stop_face_recognition()
-                break
-
-
 
     def _update_clock(self):
         """Update the date/time display."""
@@ -343,20 +330,6 @@ class Face_Recognition:
         self.datetime_label.config(text=date_time)
         self.datetime_label.after(1000, self._update_clock)
 
-    def stop_face_recognition(self):
-        self.is_running = False # this will tell loop to stop
-        # Release video capture if it exists
-        if self.video_capture:
-            self.video_capture.release()
-            cv2.destroyAllWindows()
-
-    def i_exit(self): 
-        self.stop_face_recognition()
-        self.root.destroy()
-
-
-
-        
 def main():
     root=Tk()
     obj=Face_Recognition(root)
