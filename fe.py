@@ -515,7 +515,7 @@ class FaceRecognition:
                         confidence = 1 - row.get('distance', 0)  # Convert distance to confidence
                         
                         # Only process if confidence is high enough
-                        if confidence < 0.50:  # Adjust threshold as needed
+                        if confidence < 0.58:  # Adjust threshold as needed
                             continue
                         
                         # Extract face coordinates
