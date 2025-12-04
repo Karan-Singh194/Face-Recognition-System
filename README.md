@@ -53,6 +53,7 @@ Face Attendance System/
 - Login screen (`login.py`) with username & password.
 - Connects to MySQL (default DB: `face_system`).
 - On successful login, the **Admin Dashboard** opens automatically.
+  
  ![screenshot](screenshot/login.png)
 
 
@@ -66,7 +67,8 @@ A central control hub providing access to all system modules:
 - 📸 **Photo Capture** (`capture_image.py`)
 - 📊 **Attendance Management** (`attendance.py`)
 - 👤 **Developer / Contact Info** (`developer.py`)
-  ![screenshot](main.png)
+
+  ![screenshot](screenshot/main.png)
 
 All navigation buttons use images from the `photos/` folder and open modules in separate windows.
 
@@ -87,7 +89,9 @@ Manage complete student information stored in the `face` table.
 - 🗂️ Data displayed using Tkinter **Treeview** table.
 - 📅 Date picker using **tkcalendar.DateEntry**.
 - 🗃️ All DB operations managed via a **DatabaseManager** helper class.
-![screenshot](detail.png)
+
+![screenshot](screenshot/detail.png)
+
 ---
 
 ### 📸 4. Photo Capture (`capture_image.py`)
@@ -99,7 +103,9 @@ Capture clear face images for training the system.
   - `haarcascade_frontalface_default.xml`
 - 💾 Saves captured images to the `student_images/` folder.
 - 🔄 Updates `photo` field in the database (No → Yes).
-![screenshot](capture.png)
+
+![screenshot](screenshot/capture.png)
+
 ---
 
 ### 🤖 5. Face Recognition & Auto Attendance (`fe.py`)
@@ -112,12 +118,15 @@ Real-time face recognition + automated attendance logging.
   - Retrieves student info from DB.
   - Inserts or updates attendance in `attendance_records`.
   - Avoids repeated marking with a **cooldown system**.
-![screenshot](fe.png)
+
+![screenshot](screenshot/fe.png)
 
 **UI Displays:**
 - 🎥 Live camera feed  
 - 🟢 Recognition status  
 - ✔️ Attendance success message  
+
+![screenshot](screenshot/fe_(2).png)
 
 Uses **threading** for smooth UI + camera operations.
 
@@ -133,7 +142,8 @@ Complete attendance record management system.
 - 🗑️ Delete attendance entries.
 - 📤 Export / 📥 Import attendance using CSV.
 - 🗃️ Powered by **DatabaseManager** for SQL operations.
-![screenshot](attendance.png)
+
+![screenshot](screenshot/attendance.png)
 ---
 
 ### 👤 7. Developer / Contact Info (`developer.py`)
@@ -142,7 +152,8 @@ Provides a simple information page with:
 - 🧑‍💻 Developer name (e.g., **Karan Singh**)
 - 📝 Short bio or project details
 - 🔗 Optional links (GitHub, LinkedIn, Email, etc.)
-![screenshot](developer.png)
+
+![screenshot](screenshot/developer.png)
 ---
 
 ## 🗄️ Database Setup (MySQL)
@@ -270,9 +281,20 @@ python login.py
 The student_images/ folder includes example images:
 
 - **9_SRK.jpg**
+  
+  ![screenshot](student_images/9_SRK.jpg)
+  
 - **10_Amir_Khan.jpg**
+  
+  ![screenshot](student_images/10_Amir_Khan.jpg)
+  
 - **11_Akshay_Kumar.jpg**
+
+  ![screenshot](student_images/11_Akshay_Kumar.jpg)
+  
 - **12_Amitab_Bachchan.jpg**
+
+  ![screenshot](student_images/12_Amitab_Bachchan.jpg)
 
 🚀 Possible Improvements
 
