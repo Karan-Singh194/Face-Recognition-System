@@ -5,7 +5,7 @@ import time
 import mysql.connector
 from mysql.connector import errorcode
 import os
-import csv # <--- NEW IMPORT
+import csv 
 
 # --- DatabaseManager Class ---
 # Manages all database connections and queries for attendance
