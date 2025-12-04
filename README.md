@@ -53,7 +53,7 @@ Face Attendance System/
 - Login screen (`login.py`) with username & password.
 - Connects to MySQL (default DB: `face_system`).
 - On successful login, the **Admin Dashboard** opens automatically.
- ![screenshot](login.png)
+ ![screenshot](screenshot/login.png)
 
 
 ---
